@@ -14,6 +14,26 @@ use App\Models\Tags;
 
 class ProductController extends Controller
 {
+    //function sanitize_title_with_dashes taken from wordpress
+    public static function sanitize($title) {
+        $title = strip_tags($title);
+        // Preserve escaped octets.
+        $title = preg_replace('|%([a-fA-F0-9][a-fA-F0-9])|', '---$1---', $title);
+        // Remove percent signs that are not part of an octet.
+        $title = str_replace('%', '', $title);
+        // Restore octets.
+        $title = preg_replace('|---([a-fA-F0-9][a-fA-F0-9])---|', '%$1', $title);
+    
+        $title = strtolower($title);
+        $title = preg_replace('/&.+?;/', '', $title); // kill entities
+        $title = str_replace('.', '-', $title);
+        $title = preg_replace('/[^%a-z0-9 _-]/', '', $title);
+        $title = preg_replace('/\s+/', '-', $title);
+        $title = preg_replace('|-+|', '-', $title);
+        $title = trim($title, '-');
+    
+        return $title;
+    }
     /**
      * Display a listing of the resource.
      *
@@ -67,6 +87,8 @@ class ProductController extends Controller
 
         $request->thumb->move(public_path('images'), $thumb);
 
+        $slug = ProductController::sanitize($request->input('name'));
+
         $product = Product::create([
             'name' => $request->input('name'),
             'desc' => $request->input('desc'),
@@ -75,7 +97,8 @@ class ProductController extends Controller
             'category_id' => $request->input('category'),
             'discount_id' => $request->input('discount'),
             'user_id' => Auth::user()->id,
-            'thumb' => $thumb
+            'thumb' => $thumb,
+            'slug' => $slug
         ]);
 
         return redirect()->route('product.index')->with('message','Product Created Successfull');
@@ -89,7 +112,7 @@ class ProductController extends Controller
      */
     public function show($id)
     {
-        //
+        
     }
 
     /**
@@ -136,6 +159,8 @@ class ProductController extends Controller
 //delete existing image
             unlink("images/".$category->thumb);
 
+            $slug = ProductController::sanitize($request->input('name'));
+
             $data = [
                 'name' => $request->input('name'),
                 'desc' => $request->input('desc'),
@@ -144,7 +169,8 @@ class ProductController extends Controller
                 'category_id' => $request->input('category'),
                 'discount_id' => $request->input('discount'),
                 'user_id' => Auth::user()->id,
-                'thumb' => $thumb
+                'thumb' => $thumb,
+                'slug' => $slug
             ];
 
         }else{
@@ -158,6 +184,10 @@ class ProductController extends Controller
                 'tags' => 'required'
             ]);
 
+            $slug = ProductController::sanitize($request->input('name'));
+
+            //return $slug;
+
             $data = [
                 'name' => $request->input('name'),
                 'desc' => $request->input('desc'),
@@ -166,6 +196,7 @@ class ProductController extends Controller
                 'category_id' => $request->input('category'),
                 'discount_id' => $request->input('discount'),
                 'user_id' => Auth::user()->id,
+                'slug' => $slug
                 
             ];
         }
@@ -193,4 +224,6 @@ class ProductController extends Controller
         $product->delete();
         return redirect()->route('product.index')->with('message', 'Product Deleted Successfull');
     }
+
+    
 }

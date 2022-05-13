@@ -17,10 +17,13 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Auth::routes();
+Auth::routes(['register' => false]);
 
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('admin');
+
 Route::resource('product', ProductController::class);
 Route::resource('discount', DiscountController::class);
 Route::resource('tags', TagsController::class);
 Route::resource('category', CategoryController::class);
+
+Route::any('{query}', function() { return redirect('/'); })->where('query', '.*');
