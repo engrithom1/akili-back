@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Front\ProductController;
 use App\Http\Controllers\Front\CategoryController;
+use App\Http\Controllers\Front\OrderController;
 use App\Http\Controllers\Front\AuthController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -30,6 +31,8 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('/logout',[AuthController::class, 'logout']);
     Route::get('/current-user',[AuthController::class, 'currentUser']);
 });
+
+Route::post('/create-order',[OrderController::class, 'createOrder']);
 
 Route::get('/categories', [CategoryController::class, 'index']);
 Route::get('/top-categories', [CategoryController::class, 'topCategories']);
