@@ -28,6 +28,7 @@ class OrderController extends Controller
             'fullname' => $request->user['fullname'],
             'region' => $request->user['region'],
             'address' => $request->user['address'],
+            'phonenumber' => $request->user['phonenumber'],
             
         ];
         /////////////////update data////////////

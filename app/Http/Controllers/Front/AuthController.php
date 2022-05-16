@@ -13,26 +13,35 @@ class AuthController extends Controller
 {
     public function register(Request $request){
 
-        $fields = $request->validate([
+        $validator = Validator::make($request->all(),[
             'name' => 'required|string|max:255|unique:users',
-            'phonenumber' => 'required|string|max:15',
-            'password' => 'required'
+            'phonenumber' => 'required|string|max:10|min:10|unique:users',
+            'password' => 'required|string|min:6'
         ]);
 
         //$password = "1234567890";
 
-        $user = User::create([
-            'name' => $fields['name'],
-            'phonenumber' => $fields['phonenumber'],
-            'password' => bcrypt($fields['password'])
-        ]); 
 
-        $token = $user->createToken('apptoken')->plainTextToken;
+        if(count($validator->errors()) > 0){
 
-        $response = [
-            'user' => $user,
-            'token' => $token,
-        ];
+            return response($validator->errors());
+        }
+
+            $user = User::create([
+                'name' => $request->name,
+                'phonenumber' => $request->phonenumber,
+                'password' => bcrypt($request->password)
+            ]); 
+    
+            $token = $user->createToken('apptoken')->plainTextToken;
+    
+            $response = [
+                'user' => $user,
+                'token' => $token,
+            ];
+
+            return response($response);
+        
 
         /*$to = $fields['phonenumber'];
         $from = getenv("TWILIO_FROM");
@@ -57,7 +66,7 @@ class AuthController extends Controller
         curl_close($ch);
         //Sending message ends here*/
 
-        return response($response); 
+         
 
     }
 
@@ -76,8 +85,8 @@ class AuthController extends Controller
         //check password
         if(!$user || !Hash::check($fields['password'], $user->password)){
             return response([
-                'error' => 'bad creds'
-            ], 401);
+                'error' => 'Incorrect username or password'
+            ]);
         }
 
         $token = $user->createToken('apptoken')->plainTextToken;
