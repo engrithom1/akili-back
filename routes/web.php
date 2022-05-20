@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\TagsController;
 use App\Http\Controllers\Admin\DiscountController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Admin\OrderController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -21,6 +22,10 @@ Auth::routes(['register' => false]);
 
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('admin');
 
+Route::get('/order/done', [OrderController::class, 'doneOrder'])->name('done');
+Route::get('/order/rejected', [OrderController::class, 'rejectedOrder'])->name('rejected');
+Route::get('/product/inactive', [ProductController::class, 'inActive'])->name('inactive');
+Route::resource('order', OrderController::class);
 Route::resource('product', ProductController::class);
 Route::resource('discount', DiscountController::class);
 Route::resource('tags', TagsController::class);

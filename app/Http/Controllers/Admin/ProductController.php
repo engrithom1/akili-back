@@ -41,11 +41,20 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $prodz = Product::all();
+        $prodz = Product::where('status','1')->get();
         $products = ProductResource::collection($prodz);
 
         
         return view('product.index',compact('products'));
+    }
+
+    public function inActive()
+    {
+        $prodz = Product::where('status','0')->get();
+        $products = ProductResource::collection($prodz);
+
+        
+        return view('product.inactive',compact('products'));
     }
 
     /**
@@ -81,7 +90,7 @@ class ProductController extends Controller
             'tags' => 'required'
         ]);
 
-        $thumb = str_replace("-", " ", $request->thumb->getClientOriginalName());
+        $thumb = preg_replace('/\s+/', '', $request->thumb->getClientOriginalName());
 
         $thumb = time().'-'.$thumb;
 
@@ -139,10 +148,11 @@ class ProductController extends Controller
      */
     public function update(Request $request, Product $product)
     {
-        if(count($request->all()) == 9){
+        if(count($request->all()) == 10){
            
             $request->validate([
                 'name' => 'required',
+                'status' => 'required',
                 'desc' => 'required',
                 'thumb' => 'required|mimes:jpg,png,jpeg|max:500',
                 'category' => 'required',
@@ -151,13 +161,13 @@ class ProductController extends Controller
                 'tags' => 'required'
             ]);
 
-            $thumb = str_replace(" ", "-", $request->thumb->getClientOriginalName());
+            $thumb = preg_replace('/\s+/', '', $request->thumb->getClientOriginalName());
 
             $thumb = time().'-'.$thumb;
     
             $request->thumb->move(public_path('images'), $thumb);
 //delete existing image
-            unlink("images/".$category->thumb);
+            unlink("images/".$product->thumb);
 
             $slug = ProductController::sanitize($request->input('name'));
 
@@ -167,6 +177,7 @@ class ProductController extends Controller
                 'price' => $request->input('price'),
                 'tag' => $request->input('tags'),
                 'category_id' => $request->input('category'),
+                'status' => $request->input('status'),
                 'discount_id' => $request->input('discount'),
                 'user_id' => Auth::user()->id,
                 'thumb' => $thumb,
@@ -178,6 +189,7 @@ class ProductController extends Controller
             $request->validate([
                 'name' => 'required',
                 'desc' => 'required',
+                'status' => 'required',
                 'category' => 'required',
                 'discount' => 'required',
                 'price' => 'required',
@@ -194,6 +206,7 @@ class ProductController extends Controller
                 'price' => $request->input('price'),
                 'tag' => $request->input('tags'),
                 'category_id' => $request->input('category'),
+                'status' => $request->input('status'),
                 'discount_id' => $request->input('discount'),
                 'user_id' => Auth::user()->id,
                 'slug' => $slug
@@ -220,9 +233,15 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
-        unlink("images/".$product->thumb);
-        $product->delete();
-        return redirect()->route('product.index')->with('message', 'Product Deleted Successfull');
+        try {
+            
+            $product->delete();
+            unlink("images/".$product->thumb);
+            return redirect()->route('product.index')->with('message', 'Product Deleted Successfull');
+
+        } catch (\Throwable $th) {
+            return redirect()->route('product.index')->with('error', 'Can\'t delete this product');
+        }
     }
 
     

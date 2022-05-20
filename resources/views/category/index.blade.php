@@ -51,8 +51,8 @@
                     @foreach ($categories as $category)
                     <tr>
                         <td>{{ $category->name }}</td>
-                        <td>23</td>
-                        <td>Edinburgh</td>
+                        <td>{{ count($category->products) }}</td>
+                        <td>{{ $category->creator }}</td>
                         <td>
                             <form method="POST" action="{{ route('category.destroy',$category->id) }}">
                                 @csrf

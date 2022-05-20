@@ -15,6 +15,11 @@
     {{session('message')}}
 </div>
 @endif
+@if (session()->has('error'))
+<div class="alert alert-danger">
+    {{session('error')}}
+</div>
+@endif
 <!-- DataTales Example -->
 <div class="card shadow mb-4">
     <div class="card-header py-3">
@@ -51,7 +56,12 @@
 
                     @foreach ($products as $product)
                     <tr>
-                        <td>{{ $product->name }}</td>
+                        <td>
+                            <button class="small-image" image={{ $product->thumb }}>
+                                <img src="{{ asset('images/'.$product->thumb) }}" width="30px" height="30px" alt="">
+                            </button>
+                            {{ $product->name }}
+                        </td>
                         <td>{{ $product->category->name }}</td>
                         <td>{{ $product->price }}</td>
                         <td>{{ $product->discount->percent.' %' }}</td>
@@ -79,5 +89,7 @@
         </div>
     </div>
 </div>
+
+
 
 @endsection

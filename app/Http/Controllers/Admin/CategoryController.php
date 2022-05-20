@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File; 
 use App\Http\Controllers\Controller;
 use App\Models\Category;
+use App\Models\Product;
 use Illuminate\Http\Request;
 
 class CategoryController extends Controller
@@ -17,8 +18,12 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $categories = Category::all();
+        $categories = Category::join('users','categories.user_id', '=', 'users.id')
+                              ->select('users.name AS creator','categories.name','categories.id')
+                              ->with('products')
+                              ->get();
         //$categories = Category::withCount('products')->get();
+        //return $categories;
         return view('category.index',compact('categories'));
     }
 
@@ -62,7 +67,7 @@ class CategoryController extends Controller
             'thumb' => 'required|mimes:jpg,png,jpeg|max:500'
         ]);
 
-        $thumb = str_replace("-", " ", $request->thumb->getClientOriginalName());
+        $thumb = preg_replace('/\s+/', '', $request->thumb->getClientOriginalName());
 
         $thumb = time().'-'.$thumb;
 
@@ -121,7 +126,7 @@ class CategoryController extends Controller
                 'thumb' => 'required|mimes:jpg,png,jpeg|max:500'
             ]);
 
-            $thumb = str_replace(" ", "-", $request->thumb->getClientOriginalName());
+            $thumb = preg_replace('/\s+/', '', $request->thumb->getClientOriginalName());
 
             $thumb = time().'-'.$thumb;
     

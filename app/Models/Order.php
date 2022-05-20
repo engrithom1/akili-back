@@ -11,7 +11,7 @@ class Order extends Model
 
     protected $table = 'orders';
     protected $primaryKey = 'id';
-    protected $fillable = ['total','status','user_id'];
+    protected $fillable = ['total','status','admin_desc','user_desc','user_id'];
 
     public function order_details()
     {

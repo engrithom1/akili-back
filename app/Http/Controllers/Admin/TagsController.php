@@ -17,7 +17,10 @@ class TagsController extends Controller
      */
     public function index()
     {
-        $tags = Tags::all();
+        $tags = Tags::join('users','tags.user_id', '=', 'users.id')
+                    ->select('users.name AS creator','tags.name','tags.id')
+                    ->get();
+
         return view('tags.index',compact('tags'));
     }
 
@@ -45,7 +48,7 @@ class TagsController extends Controller
             'thumb' => 'required|mimes:jpg,png,jpeg|max:500'
         ]);
 
-        $thumb = str_replace("-", " ", $request->thumb->getClientOriginalName());
+        $thumb = preg_replace('/\s+/', '', $request->thumb->getClientOriginalName());
 
         $thumb = time().'-'.$thumb;
 
@@ -100,7 +103,7 @@ class TagsController extends Controller
                 'thumb' => 'required|mimes:jpg,png,jpeg|max:500'
             ]);
 
-            $thumb = str_replace(" ", "-", $request->thumb->getClientOriginalName());
+            $thumb = preg_replace('/\s+/', '', $request->thumb->getClientOriginalName());
 
             $thumb = time().'-'.$thumb;
     

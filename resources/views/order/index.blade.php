@@ -4,9 +4,7 @@
 
 <!-- Page Heading -->
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
-    <h1 class="h3 mb-0 text-gray-800">Tags</h1>
-    <a href="{{ route('tags.create') }}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
-            class="fas fa-plus text-white-50"></i>Create Tag</a>
+    <h1 class="h3 mb-0 text-gray-800">Orders</h1>
 </div>
 
 <!--message-->
@@ -18,41 +16,51 @@
 <!-- DataTales Example -->
 <div class="card shadow mb-4">
     <div class="card-header py-3">
-        <h6 class="m-0 font-weight-bold text-primary">Available Tags</h6>
+        <h6 class="m-0 font-weight-bold text-primary">Received Orders</h6>
     </div>
     <div class="card-body">
         <div class="table-responsive">
             <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                 <thead>
                     <tr>
-                        <th>Name</th>
+                        <th>OrderId</th>
+                        <th>Total</th>
+                        <th>Send By</th>
+                        <th>Phonenumber</th>
+                        <th>status</th>
 
-                        <th>Creator</th>
                         <th>Actions</th>
 
                     </tr>
                 </thead>
                 <tfoot>
                     <tr>
-                        <th>Name</th>
+                        <th>OrderId</th>
+                        <th>Total</th>
+                        <th>Send By</th>
+                        <th>Phonenumber</th>
+                        <th>status</th>
 
-                        <th>Creator</th>
                         <th>Actions</th>
 
                     </tr>
                 </tfoot>
                 <tbody>
 
-                    @foreach ($tags as $tag)
+                    @foreach ($orders as $order)
                     <tr>
-                        <td>{{ $tag->name }}</td>
-                        <td>{{ $tag->creator }}</td>
+                        <td>{{ $order->id }}</td>
+                        <td>{{ $order->total }}</td>
+                        <td>{{ $order->fullname }}</td>
+                        <td>{{ $order->phonenumber}}</td>
+                        <td>{{ $order->status }}</td>
+
                         <td>
-                            <form method="POST" action="{{ route('tags.destroy',$tag->id) }}">
+                            <form method="POST" action="{{ route('order.destroy',$order->id) }}">
                                 @csrf
                                 @method('DELETE')
-                                <a href="{{ route('tags.edit', $tag->id) }}" class="btn btn-success">
-                                    <i class="fas fa-edit"></i>
+                                <a href="{{ route('order.show', $order->id) }}" class="btn btn-success">
+                                    <i class="fas fa-eye"></i>
                                 </a>
                                 <span> </span>
                                 <button class="btn btn-danger">

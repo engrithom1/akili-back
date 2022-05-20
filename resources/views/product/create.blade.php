@@ -59,7 +59,7 @@
 
                 </div>
                 <div class="col-sm-12 col-md-4">
-                    <h6>Product Tags</h6>
+                    <h6>Product Tags*</h6>
 
                     @foreach ($tags as $tag)
                     <div class="form-group">
@@ -95,7 +95,7 @@
         var tags = document.getElementsByClassName('tags');
         for (var i=0; i<tags.length; i++) {
             if(tags[i].checked) {
-               res = tags[i].value+',';
+               res += tags[i].value+',';
             } 
         }
         

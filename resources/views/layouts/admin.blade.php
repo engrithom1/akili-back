@@ -20,6 +20,13 @@
     <!-- Custom styles for this template-->
     <link href="{{ asset('css/sb-admin-2.css')}}" rel="stylesheet">
 
+    <style>
+        .small-image {
+            padding: 0px !important;
+            border: 0px !important;
+        }
+    </style>
+
 </head>
 
 <body id="page-top">
@@ -67,6 +74,7 @@
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Products menu:</h6>
                         <a class="collapse-item" href="{{ route('product.index') }}">Products</a>
+                        <a class="collapse-item" href="{{ route('inactive') }}">Inactive</a>
                         <a class="collapse-item" href="{{ route('category.index') }}">Categories</a>
                         <a class="collapse-item" href="{{ route('tags.index') }}">Tags</a>
                     </div>
@@ -105,9 +113,9 @@
                 <div id="collapseOrder" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Orders menu:</h6>
-                        <a class="collapse-item" href="buttons.html">Received</a>
-                        <a class="collapse-item" href="cards.html">Done</a>
-                        <a class="collapse-item" href="cards.html">Rejected</a>
+                        <a class="collapse-item" href="{{ route('order.index') }}">Received</a>
+                        <a class="collapse-item" href="{{ route('done') }}">Done</a>
+                        <a class="collapse-item" href="{{ route('rejected') }}">Rejected</a>
                     </div>
                 </div>
             </li>
@@ -248,6 +256,18 @@
         <i class="fas fa-angle-up"></i>
     </a>
 
+    <div class="modal fade auto-off" id="demoModal" tabindex="-1" role="dialog" aria-labelledby="demoModal"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content p-2">
+                <img id="img-small-image" src="" style="width:100%;height:auto" alt="">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true" class="btn btn-danger">&times; close</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
 
 
     <!-- Bootstrap core JavaScript-->
@@ -266,6 +286,18 @@
      Page level custom scripts 
     <script src="{{ asset('js/demo/chart-area-demo.js')}}"></script>
     <script src="{{ asset('js/demo/chart-pie-demo.js')}}"></script> -->
+
+    <script>
+        $('.small-image').click(function() {
+            var d = $(this).attr("image");      
+            //alert(d);
+            var url = 'http://127.0.0.1:8000/images/'+d;
+            $('#img-small-image').attr('src',url); 
+            $('#demoModal').modal('show');   
+            });
+           
+        
+    </script>
 
 </body>
 

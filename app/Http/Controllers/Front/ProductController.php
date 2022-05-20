@@ -18,12 +18,14 @@ class ProductController extends Controller
     public function index()
     {
         $products = Product::orderBy('products.views','desc')
+        ->where('products.status', 1)
         ->join('discounts','products.discount_id', '=', 'discounts.id')
         ->select('products.name','products.desc','products.slug','products.price','products.thumb','products.id','discounts.percent')
         ->limit(12)
         ->get();
 
         $recommended = Product::orderBy('products.views','asc')
+        ->where('products.status', 1)
         ->join('discounts','products.discount_id', '=', 'discounts.id')
         ->select('products.name','products.desc','products.slug','products.price','products.thumb','products.id','discounts.percent')
         ->limit(12)
@@ -32,7 +34,7 @@ class ProductController extends Controller
         $offers = Product::orderBy('products.views','desc')
         ->join('discounts','products.discount_id', '=', 'discounts.id')
         ->select('products.name','products.desc','products.slug','products.price','products.thumb','products.id','discounts.percent')
-        ->where([['discounts.percent','>=', 1]])
+        ->where([['discounts.percent','>=', 1],'products.status' => 1])
         ->limit(8)
         ->get();
 
@@ -61,7 +63,7 @@ class ProductController extends Controller
         $products = Product::orderBy('products.views','desc')
         ->join('discounts','products.discount_id', '=', 'discounts.id')
         ->select('products.name','products.desc','products.slug','products.price','products.thumb','products.id','discounts.percent')
-        ->where(['products.category_id' => $category_id])
+        ->where(['products.category_id' => $category_id,'products.status' => 1])
         ->limit(8)
         ->get();
 

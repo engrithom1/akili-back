@@ -29,14 +29,14 @@ class CategoryController extends Controller
 
     public function productsByCategory($id){
 
-        $products = Product::where('products.category_id',$id)
+        $products = Product::where(['products.category_id' => $id, 'products.status' => 1])
         ->orderBy('products.views','desc')
         ->join('discounts','products.discount_id', '=', 'discounts.id')
         ->select('products.name','products.desc','products.slug','products.price','products.thumb','products.id','discounts.percent')
         ->limit(8)
         ->get();
 
-        $recommended = Product::where('products.category_id',$id)
+        $recommended = Product::where(['products.category_id' => $id, 'products.status' => 1])
         ->orderBy('products.views','asc')
         ->join('discounts','products.discount_id', '=', 'discounts.id')
         ->select('products.name','products.desc','products.slug','products.price','products.thumb','products.id','discounts.percent')
