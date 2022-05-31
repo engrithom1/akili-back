@@ -37,7 +37,6 @@ class OrderController extends Controller
         ->get();
 
 
-        
         return view('order.done',compact('orders'));
     }
 

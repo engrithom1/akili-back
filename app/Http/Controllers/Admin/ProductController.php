@@ -39,9 +39,12 @@ class ProductController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $prodz = Product::where('status','1')->get();
+        $prodz = Product::orderBy('views','desc')->where('status','1')->paginate(10);
+        if ($request->has('search')) {
+            $prodz = Product::orderBy('views','desc')->where('status','1')->where('name','like',"%{$request->search}%")->get();
+        }
         $products = ProductResource::collection($prodz);
 
         

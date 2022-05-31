@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\DiscountController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\OrderController;
+use App\Http\Controllers\Admin\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -21,10 +22,14 @@ use Illuminate\Support\Facades\Route;
 Auth::routes(['register' => false]);
 
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('admin');
+Route::get('/user/subscribers', [UserController::class, 'Subscribers'])->name('subscribers');
+Route::get('/user/admins', [UserController::class, 'Admins'])->name('admins');
+Route::get('/user/permissions', [UserController::class, 'Permissions'])->name('permissions');
 
 Route::get('/order/done', [OrderController::class, 'doneOrder'])->name('done');
 Route::get('/order/rejected', [OrderController::class, 'rejectedOrder'])->name('rejected');
 Route::get('/product/inactive', [ProductController::class, 'inActive'])->name('inactive');
+
 Route::resource('order', OrderController::class);
 Route::resource('product', ProductController::class);
 Route::resource('discount', DiscountController::class);

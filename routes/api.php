@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Front\ProductController;
 use App\Http\Controllers\Front\CategoryController;
+use App\Http\Controllers\Front\TagController;
 use App\Http\Controllers\Front\OrderController;
 use App\Http\Controllers\Front\AuthController;
 use Illuminate\Http\Request;
@@ -30,9 +31,18 @@ Route::post('/login',[AuthController::class, 'login']);
 Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('/logout',[AuthController::class, 'logout']);
     Route::get('/current-user',[AuthController::class, 'currentUser']);
+   
 });
 
+//Route::post('/logout',[AuthController::class, 'logout']);
+
+Route::get('/get-orders/{id}',[OrderController::class, 'getOrders']);
 Route::post('/create-order',[OrderController::class, 'createOrder']);
+
+Route::get('/tags', [TagController::class, 'index']);
+Route::get('/top-tags', [TagController::class, 'topTags']);
+Route::get('/get-tag/{id}', [TagController::class, 'getTag']);
+Route::get('/products-tag/{id}', [TagController::class, 'productsByTag']);
 
 Route::get('/categories', [CategoryController::class, 'index']);
 Route::get('/top-categories', [CategoryController::class, 'topCategories']);

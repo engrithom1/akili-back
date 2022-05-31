@@ -6,37 +6,43 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Category;
 use App\Models\Product;
+use App\Models\Tags;
 
-class CategoryController extends Controller
+class TagController extends Controller
 {
    public function index(){
-        return Category::select()
-                        ->with('products')
+        return Tags::select()
                         ->get();
    }
 
-   public function topCategories(){
-        return Category::select()
-                       ->with('products')
-                       ->limit(3)
+   public function topTags(){
+        return Tags::select()
+                       ->limit(5)
                        ->get();
     }
 
-    public function getCategory($id){
-        return Category::where('id',$id)
+    public function getTag($id){
+        return Tags::where('id',$id)
                        ->first();
     }
 
-    public function productsByCategory($id){
+    public function productsByTag($id){
 
-        $products = Product::where(['products.category_id' => $id, 'products.status' => 1])
+        //$value = Tags::select('id')->get();
+        $value = [4,5,6,7,8,9];
+    
+        //$f = explode(",", $value);
+
+        $products = Product::where('products.status', 1)
+        //->whereIn('products.tag',$value)
         ->orderBy('products.views','desc')
         ->join('discounts','products.discount_id', '=', 'discounts.id')
         ->select('products.name','products.desc','products.slug','products.price','products.thumb','products.id','discounts.percent')
         ->limit(8)
         ->get();
 
-        $recommended = Product::where(['products.category_id' => $id, 'products.status' => 1])
+        $recommended = Product::where('products.status', 1)
+        //->whereIn('products.tag',$id)
         ->orderBy('products.views','asc')
         ->join('discounts','products.discount_id', '=', 'discounts.id')
         ->select('products.name','products.desc','products.slug','products.price','products.thumb','products.id','discounts.percent')

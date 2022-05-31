@@ -21,14 +21,13 @@ class ProductController extends Controller
         ->where('products.status', 1)
         ->join('discounts','products.discount_id', '=', 'discounts.id')
         ->select('products.name','products.desc','products.slug','products.price','products.thumb','products.id','discounts.percent')
-        ->limit(12)
+        ->limit(8)
         ->get();
 
         $recommended = Product::orderBy('products.views','asc')
         ->where('products.status', 1)
         ->join('discounts','products.discount_id', '=', 'discounts.id')
         ->select('products.name','products.desc','products.slug','products.price','products.thumb','products.id','discounts.percent')
-        ->limit(12)
         ->get();
 
         $offers = Product::orderBy('products.views','desc')
@@ -51,7 +50,7 @@ class ProductController extends Controller
     {
         $product = Product::join('categories','products.category_id','=','categories.id')
                             ->join('discounts','products.discount_id', '=', 'discounts.id')
-                            ->select('products.name','products.desc','products.price','products.thumb','products.id','products.tag','products.views','discounts.percent')
+                            ->select('products.name','categories.id as category_id','categories.name as category','products.desc','products.price','products.thumb','products.id','products.tag','products.views','discounts.percent')
                             ->where(['products.id' => $id])->first();
         return $product;
     }

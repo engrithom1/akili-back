@@ -4,9 +4,9 @@
 
 <!-- Page Heading -->
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
-    <h1 class="h3 mb-0 text-gray-800">Products</h1>
+    <h1 class="h3 mb-0 text-gray-800">Subscribers</h1>
 
-    <form method="GET" action="{{ route('product.index') }}">
+    <form method="GET" action="{{ route('subscribers') }}">
         <div class="form-row align-items-center">
             <div class="col-auto">
                 <input type="search" name="search" class="form-control mb-2" id="inlineFormInput">
@@ -16,9 +16,6 @@
             </div>
         </div>
     </form>
-
-    <a href="{{ route('product.create') }}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
-            class="fas fa-plus text-white-50"></i> Create Product</a>
 </div>
 
 <!--message-->
@@ -35,7 +32,7 @@
 <!-- DataTales Example -->
 <div class="card shadow mb-4">
     <div class="card-header py-3">
-        <h6 class="m-0 font-weight-bold text-primary">Available Products</h6>
+        <h6 class="m-0 font-weight-bold text-primary">Available Subscribers</h6>
     </div>
     <div class="card-body">
         <div class="table-responsive">
@@ -43,11 +40,9 @@
                 <thead>
                     <tr>
                         <th>Name</th>
-                        <th>Category</th>
-                        <th>Price</th>
-                        <th>Dis</th>
-                        <th>Views</th>
-                        <th>Creator</th>
+                        <th>Fullname</th>
+                        <th>Phonenumber</th>
+                        <th>Region</th>
                         <th>Actions</th>
 
                     </tr>
@@ -55,41 +50,35 @@
                 <tfoot>
                     <tr>
                         <th>Name</th>
-                        <th>Category</th>
-                        <th>Price</th>
-                        <th>Dis</th>
-                        <th>Views</th>
-                        <th>Creator</th>
+                        <th>Fullname</th>
+                        <th>Phonenumber</th>
+                        <th>Region</th>
                         <th>Actions</th>
 
                     </tr>
                 </tfoot>
                 <tbody>
 
-                    @foreach ($products as $product)
+                    @foreach ($subscribers as $subscriber)
                     <tr>
+
+                        <td>{{ $subscriber->name }}</td>
+                        <td>{{ ($subscriber->fullname) ? $subscriber->fullname : 'null' }}</td>
+                        <td>{{ $subscriber->phonenumber }}</td>
+                        <td>{{ $subscriber->region ? $subscriber->region : 'null' }}</td>
                         <td>
-                            <button class="small-image" image={{ $product->thumb }}>
-                                <img src="{{ asset('images/'.$product->thumb) }}" width="30px" height="30px" alt="">
-                            </button>
-                            {{ $product->name }}
-                        </td>
-                        <td>{{ $product->category->name }}</td>
-                        <td>{{ $product->price }}</td>
-                        <td>{{ $product->discount->percent.' %' }}</td>
-                        <td>{{ $product->views }}</td>
-                        <td>{{ $product->user->name }}</td>
-                        <td>
-                            <form method="POST" action="{{ route('product.destroy',$product->id) }}">
+                            <form method="POST" action="">
                                 @csrf
                                 @method('DELETE')
-                                <a href="{{ route('product.edit', $product->id) }}" class="btn btn-success">
+                                <a href="" class="btn btn-success">
                                     <i class="fas fa-edit"></i>
                                 </a>
                                 <span> </span>
+                                @if (Auth::user()->level_id == 3)
                                 <button class="btn btn-danger">
                                     <i class="fas fa-trash"></i>
                                 </button>
+                                @endif
                             </form>
                         </td>
 
@@ -100,7 +89,7 @@
             </table>
 
         </div>
-        {{ $products->links('pagination::bootstrap-4') }}
+        {{ $subscribers->links('pagination::bootstrap-4') }}
     </div>
 </div>
 
